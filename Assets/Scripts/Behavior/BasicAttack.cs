@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BasicAttack : ABehaviour, ITarget
+public class BasicAttack : ACommandBehaviour, ITarget
 {
     public override int BehaviourId
     {

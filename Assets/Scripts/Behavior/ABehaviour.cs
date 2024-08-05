@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class ABehaviour : MonoBehaviour
+public abstract class ACommandBehaviour : MonoBehaviour
 {
     public abstract int BehaviourId { get; }
 

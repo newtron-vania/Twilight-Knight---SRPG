@@ -2,17 +2,25 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BasicMove : MonoBehaviour
+public class BasicMove : ACommandBehaviour, IMove, ITarget
 {
-    // Start is called before the first frame update
-    void Start()
+    public override int BehaviourId
+    {
+        get { return 1 << 8 | 1; }
+    }
+
+    public override void Execute(Character caster)
+    {
+        Move();
+    }
+
+    public void Move()
     {
         
     }
 
-    // Update is called once per frame
-    void Update()
+    public void GetTarget()
     {
-        
+        throw new System.NotImplementedException();
     }
 }
