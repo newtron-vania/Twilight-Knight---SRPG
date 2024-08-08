@@ -4,5 +4,9 @@ using UnityEngine;
 
 public interface ITarget
 {
-    void GetTarget();
+    List<Tile> GetAccessibleTiles(Character caster, int inputRange, TileMap tileMap);
+    
+    Tile GetTarget();
+
+    bool SetTarget(Tile inputTile);
 }

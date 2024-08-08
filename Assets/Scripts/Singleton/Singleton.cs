@@ -46,10 +46,11 @@ public abstract class Singleton<T> : MonoBehaviour where T : MonoBehaviour
 
                         // 생성된 오브젝트에, 컴포넌트 추가
                         _instance = findObject.AddComponent<T>();
-
                         // 씬이 변경되어도 객체가 유지되도록 설정
                         DontDestroyOnLoad(_instance);
                     }
+                    
+                    (_instance as Singleton<T>).Init();
                 }
 
                 // 객체 리턴
@@ -64,6 +65,7 @@ public abstract class Singleton<T> : MonoBehaviour where T : MonoBehaviour
     // 앱의 재생이 정지된 이후에도, 에디터 씬에서 고스트 객체가 생성된다.
     // 고스트 객체의 생성을 방지하기 위해서 상태를 관리한다.
 
+    protected virtual void Init() { }
     // 앱이 종료될때 호출
     protected virtual void OnApplicationQuit()
     {

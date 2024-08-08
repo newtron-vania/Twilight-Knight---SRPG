@@ -52,4 +52,11 @@ public class Define
         MainMenuScene
     }
 
+    public enum CommandType
+    {
+        Attack,
+        Move,
+        Skill
+    }
+
 }
