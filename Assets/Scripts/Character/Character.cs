@@ -22,6 +22,7 @@ public class Character : MonoBehaviour
         }
 
         characterAnimationController = gameObject.GetOrAddComponent<CharacterAnimationController>();
+        characterAnimationController.Init();
     }
 
     public void ChangeCommand(Define.CommandType commandType, ACommandBehaviour commandBehaviour)

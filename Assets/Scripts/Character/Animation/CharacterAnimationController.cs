@@ -6,11 +6,10 @@ public class CharacterAnimationController : MonoBehaviour
 {
     [SerializeField] private Animator animator; // 캐릭터의 Animator
     [SerializeField] private AnimatorOverrideController overrideController; // 오버라이드 컨트롤러
-    [SerializeField] private AnimationClip newAnimationClip; // 새로 적용할 애니메이션 클립
 
     public void Init()
     {
-        animator = GetComponent<Animator>();
+        animator = GetComponentInChildren<Animator>();
         // AnimatorOverrideController 생성
         overrideController = animator.runtimeAnimatorController as AnimatorOverrideController;
 

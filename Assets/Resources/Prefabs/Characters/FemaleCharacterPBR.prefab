@@ -2273,6 +2273,9 @@ GameObject:
   m_Component:
   - component: {fileID: 7019920669011962644}
   - component: {fileID: 7413344840680693326}
+  - component: {fileID: 6475397777854950556}
+  - component: {fileID: 5559342480607116267}
+  - component: {fileID: 4422960631142386046}
   m_Layer: 0
   m_Name: FemaleCharacterPBR
   m_TagString: Untagged
@@ -2321,6 +2324,49 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &6475397777854950556
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7647134206250791342}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf791726b2a4342f9aed39adfb4605a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _characterData: {fileID: 0}
+--- !u!114 &5559342480607116267
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7647134206250791342}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 69ee093e5c05e4844937ef4110d6e143, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  health: 100
+  attackPower: 10
+  moveRange: 5
+--- !u!114 &4422960631142386046
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7647134206250791342}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d3e3d1f9d70a4e97a7a8bdd37f11eca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 0}
+  overrideController: {fileID: 0}
+  newAnimationClip: {fileID: 0}
 --- !u!1 &7667767699941656935
 GameObject:
   m_ObjectHideFlags: 0

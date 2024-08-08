@@ -58,5 +58,4 @@ public class Define
         Move,
         Skill
     }
-
 }
