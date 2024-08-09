@@ -48,7 +48,7 @@ public class Character : MonoBehaviour
                 moveCommand = commandBehaviour;
                 break;
         }
-        commandBehaviour.Init(this);
+        commandBehaviour.Init(this, commandType);
         ChangeAnimationClip(commandType.ToString(), commandBehaviour.AnimationClipData);
     }
 
@@ -77,7 +77,7 @@ public class Character : MonoBehaviour
         {
             skillCommandList[index] = commandBehaviour;
         }
-        commandBehaviour.Init(this);
+        commandBehaviour.Init(this, Define.CommandType.Skill);
     }
 
     public void ChangeAnimationClip(string originalClipName, Data.AnimationDataSO animationData)
@@ -85,9 +85,14 @@ public class Character : MonoBehaviour
         characterAnimationController.ReplaceAnimation(originalClipName, animationData.animationClip);
     }
 
-    public void Play(string animationName, float normalizedTime)
+    public void PlayAnimation(string animationName, float normalizedTime = 0f)
     {
         characterAnimationController.Play(animationName, normalizedTime);
+    }
+
+    public bool IsAnimationPlaying()
+    {
+        return characterAnimationController.IsAnimationPlaying();
     }
 
     public void Attack()

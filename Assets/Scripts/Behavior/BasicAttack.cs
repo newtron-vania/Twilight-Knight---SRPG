@@ -42,7 +42,16 @@ public class BasicAttack : ACommandBehaviour, ITarget
 
     public override void Execute()
     {
+        _caster.PlayAnimation(CommandType.ToString(), 0f);
+        SetStateByCommandType(CommandType);
+    }
 
+    public override void OnUpdate()
+    {
+        if (!_caster.IsAnimationPlaying())
+        {
+            _caster.CharacterState = Define.BehaviourState.Idle;
+        }
     }
 
     public override bool Undo()

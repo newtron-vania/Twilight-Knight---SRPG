@@ -54,6 +54,8 @@ public class Define
 
     public enum CommandType
     {
+        None,
+        Idle,
         Attack,
         Move,
         Skill
@@ -61,6 +63,7 @@ public class Define
     
     public enum BehaviourState
     {
+        None,
         Idle,
         Waiting,
         Attack,

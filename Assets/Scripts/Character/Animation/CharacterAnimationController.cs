@@ -44,4 +44,11 @@ public class CharacterAnimationController : MonoBehaviour
 
         overrideController.ApplyOverrides(overrides);
     }
+
+    public bool IsAnimationPlaying()
+    {
+        var animInfo = animator.GetCurrentAnimatorStateInfo(0);
+        if (animInfo.normalizedTime >= 0 && animInfo.normalizedTime < 1f) return true;
+        return false;
+    }
 }
