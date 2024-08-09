@@ -21,6 +21,11 @@ public class CharacterAnimationController : MonoBehaviour
     {
         animator.Play(animationName, -1, normalizedTime);
     }
+    
+    public bool IsAnimationPlaying(string animationName)
+    {
+        return animator.GetCurrentAnimatorStateInfo(0).IsName(animationName);
+    }
 
     public void ReplaceAnimation(string originalClipName, AnimationClip newClip)
     {

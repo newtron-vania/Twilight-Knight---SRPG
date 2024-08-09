@@ -12,21 +12,25 @@ public abstract class ACommandBehaviour
     protected int _range = -99;
 
     public abstract int Range { get;}
-    
-    public abstract Data.AnimationDataSO AnimationClipData { get; }
-    public abstract void Execute(Character caster);
 
-    public abstract bool Undo(Character caster);
+    protected Data.AnimationDataSO _animationClipData;
+    public abstract Data.AnimationDataSO AnimationClipData { get; }
+    public abstract void Execute();
+
+    public abstract bool Undo();
     
     protected Character _caster;
 
-    public bool SetCaster(Character caster)
+    public bool Init(Character caster)
     {
         if (caster == null)
         {
             return false;
         }
 
+        SetAnimationEvent();
         return true;
     }
+
+    public abstract void SetAnimationEvent();
 }

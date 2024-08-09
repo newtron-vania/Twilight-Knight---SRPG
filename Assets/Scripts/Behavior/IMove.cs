@@ -4,6 +4,6 @@ using UnityEngine;
 
 public interface IMove
 {
-    void Move(Character caster);
+    void Move();
     
 }

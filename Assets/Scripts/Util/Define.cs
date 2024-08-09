@@ -58,4 +58,15 @@ public class Define
         Move,
         Skill
     }
+    
+    public enum BehaviourState
+    {
+        Idle,
+        Waiting,
+        Attack,
+        Move,
+        Skill,
+        Hit,
+        Die,
+    }
 }

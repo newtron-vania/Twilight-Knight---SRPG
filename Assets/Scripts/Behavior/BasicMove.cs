@@ -14,8 +14,9 @@ public class BasicMove : ACommandBehaviour, IMove, ITarget
     private Tile _targetTile; // 이동할 목표 타일
     private IPathFinding _pathFinding; // PathFinding 인스턴스를 참조할 변수
     private List<Tile> _accessibleTiles; // 접근 가능한 타일
-    private readonly float moveSpeed = 2.0f; // 이동 속도
-    private Tile previousTile;
+    private readonly float _moveSpeed = 2.0f; // 이동 속도
+    private float _rotationSpeed = 90f;
+    private Tile _previousTile;
 
     public override int Range
     {
@@ -31,16 +32,16 @@ public class BasicMove : ACommandBehaviour, IMove, ITarget
         get { return DataManager.Instance.AnimationData["BasicMove"]; }
     }
 
-    public override void Execute(Character caster)
+    public override void Execute()
     {
-        Move(caster);
+        Move();
     }
 
-    public override bool Undo(Character caster)
+    public override bool Undo()
     {
-        if (previousTile != null && previousTile != _targetTile)
+        if (_previousTile != null && _previousTile != _targetTile)
         {
-            caster._characterData.CurrentTile = previousTile;
+            _caster._characterData.CurrentTile = _previousTile;
             
             return true;
         }
@@ -48,7 +49,12 @@ public class BasicMove : ACommandBehaviour, IMove, ITarget
         return false;
     }
 
-    public void Move(Character caster)
+    public override void SetAnimationEvent()
+    {
+        
+    }
+
+    public void Move()
     {
         if (_pathFinding == null)
         {
@@ -59,13 +65,13 @@ public class BasicMove : ACommandBehaviour, IMove, ITarget
         TileMap tileMap = GameManager.Instance.getTileMap();
 
         // 접근 가능한 타일을 가져옵니다.
-        _accessibleTiles = GetAccessibleTiles(caster, caster.GetMoveRange(), tileMap);
+        _accessibleTiles = GetAccessibleTiles(_caster, _caster.GetMoveRange(), tileMap);
         
         // 목표 타일까지의 최단 경로를 찾습니다.
-        List<Tile> path = FindPathToTarget(caster, _targetTile, tileMap);
+        List<Tile> path = FindPathToTarget(_caster, _targetTile, tileMap);
 
         // 경로를 따라 이동합니다.
-        caster.StartCoroutine(MoveAlongPath(caster, path, tileMap));
+        _caster.StartCoroutine(MoveAlongPath(_caster, path, tileMap));
     }
 
     public List<Tile> GetAccessibleTiles(Character caster, int inputRange, TileMap tileMap)
@@ -106,11 +112,20 @@ public class BasicMove : ACommandBehaviour, IMove, ITarget
             Vector3 targetPosition = tileMap.GetWorldPositionByTile(tile);
             while (Vector3.Distance(caster.transform.position, targetPosition) > 0.01f)
             {
-                caster.transform.position = Vector3.MoveTowards(caster.transform.position, targetPosition, moveSpeed * Time.deltaTime);
+                caster.transform.position = Vector3.MoveTowards(caster.transform.position, targetPosition, _moveSpeed * Time.deltaTime);
+                
+                Vector3 direction = (targetPosition - caster.transform.position).normalized;
+                
+                if (direction != Vector3.zero)
+                {
+                    Quaternion lookRotation = Quaternion.LookRotation(direction);
+                    caster.transform.rotation = Quaternion.Slerp(caster.transform.rotation, lookRotation,  _rotationSpeed * Time.deltaTime);
+                }
                 yield return null;
             }
         }
 
+        caster.transform.position = tileMap.GetWorldPositionByTile(path[path.Count - 1]);
         _accessibleTiles = null;
         _targetTile = null;
     }

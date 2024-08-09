@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class BasicAttack : ACommandBehaviour, ITarget
@@ -20,7 +21,11 @@ public class BasicAttack : ACommandBehaviour, ITarget
 
     public override Data.AnimationDataSO AnimationClipData
     {
-        get { return DataManager.Instance.AnimationData["BasicAttack"]; }
+        get
+        {
+            if (_animationClipData == null) { _animationClipData = DataManager.Instance.AnimationData["BasickAttack"]; }
+            return _animationClipData;
+        }
     }
 
 
@@ -35,12 +40,12 @@ public class BasicAttack : ACommandBehaviour, ITarget
     }
     
 
-    public override void Execute(Character caster)
+    public override void Execute()
     {
-        Attack(caster);
+
     }
 
-    public override bool Undo(Character caster)
+    public override bool Undo()
     {
         if (_targetTile.tileObject.TryGetComponent<Character>(out Character targetCharacter))
         {
@@ -52,7 +57,16 @@ public class BasicAttack : ACommandBehaviour, ITarget
         return false;
     }
 
-    public void Attack(Character caster)
+    public override void SetAnimationEvent()
+    {
+        AnimationEvent animationEvent = new AnimationEvent();
+
+        animationEvent.functionName = "Attack";
+        animationEvent.time = 0.05f;
+        AnimationClipData.animationClip.AddEvent(animationEvent);
+    }
+
+    public void Attack()
     {
         if (_targetTile == null || (!_accessibleTiles.Contains(_targetTile)))
         {

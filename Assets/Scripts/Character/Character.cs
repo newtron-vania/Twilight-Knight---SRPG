@@ -13,7 +13,14 @@ public class Character : MonoBehaviour
     [FormerlySerializedAs("MoveCommand")] public ACommandBehaviour moveCommand;
     [FormerlySerializedAs("SkillCommand")] public List<ACommandBehaviour> skillCommandList = new List<ACommandBehaviour>();
     private int maxSkillCount = 4;
-    
+
+    private Define.BehaviourState _characterState = Define.BehaviourState.Idle;
+    public Define.BehaviourState CharacterState
+    {
+        get { return _characterState; }
+        set { _characterState = value; }
+    }
+
     public void Initialize(int characterIUd)
     {
         if (CharacterID == 0) // characterIUd가 아직 초기화되지 않은 경우에만 설정
@@ -41,8 +48,7 @@ public class Character : MonoBehaviour
                 moveCommand = commandBehaviour;
                 break;
         }
-
-        commandBehaviour.SetCaster(this);
+        commandBehaviour.Init(this);
         ChangeAnimationClip(commandType.ToString(), commandBehaviour.AnimationClipData);
     }
 
@@ -71,8 +77,7 @@ public class Character : MonoBehaviour
         {
             skillCommandList[index] = commandBehaviour;
         }
-
-        commandBehaviour.SetCaster(this);
+        commandBehaviour.Init(this);
     }
 
     public void ChangeAnimationClip(string originalClipName, Data.AnimationDataSO animationData)
@@ -87,16 +92,20 @@ public class Character : MonoBehaviour
 
     public void Attack()
     {
-        attackCommand?.Execute(this);
+        CharacterState = Define.BehaviourState.Attack;
+        attackCommand?.Execute();
     }
     // Update is called once per frame
     public void Move()
     {
-        moveCommand?.Execute(this);
+        CharacterState = Define.BehaviourState.Move;
+        moveCommand?.Execute();
     }
 
     public void UseSkill(int index)
     {
+        CharacterState = Define.BehaviourState.Skill;
+        
         if (index < 0 || index >= skillCommandList.Count)
         {
             Debug.Log($"Invalid Index");
@@ -105,6 +114,7 @@ public class Character : MonoBehaviour
 
         if (skillCommandList[index] != null)
         {
+            skillCommandList[index]?.Execute();
             ChangeAnimationClip("Skill", skillCommandList[index]?.AnimationClipData);
         }
     }
