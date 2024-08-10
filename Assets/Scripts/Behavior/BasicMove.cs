@@ -20,7 +20,7 @@ public class BasicMove : ACommandBehaviour, IMove, ITarget
     
     
     private readonly float _moveSpeed = 2.0f; // 이동 속도
-    private float _rotationSpeed = 90f;
+    private float _rotationSpeed = 10f;
     private Tile _previousTile;
 
     public override int Range
@@ -39,21 +39,22 @@ public class BasicMove : ACommandBehaviour, IMove, ITarget
 
     public override void Execute()
     {
-        _caster.PlayAnimation(CommandType.ToString(), 0f);
-        
         tileMap = GameManager.Instance.getTileMap();
-
-        // 접근 가능한 타일을 가져옵니다.
-        _accessibleTiles = GetAccessibleTiles(_caster, _caster.GetMoveRange(), tileMap);
         
+        // 접근 가능한 타일을 가져옵니다.
+        _accessibleTiles = GetAccessibleTiles(_caster, Range, tileMap);
         // 목표 타일까지의 최단 경로를 찾습니다.
         List<Tile> path = FindPathToTarget(_caster, _targetTile, tileMap);
 
         if (path == null || path.Count == 0)
         {
             Debug.LogWarning($"No path found or path is empty.");
+            return;
         }
         
+        _path = path;
+        
+        Debug.Log("Move Animation Start!");
         SetStateByCommandType(Define.CommandType.Move);
     }
 
@@ -73,26 +74,23 @@ public class BasicMove : ACommandBehaviour, IMove, ITarget
 
         return false;
     }
-
-    public override void SetAnimationEvent()
-    {
-        
-    }
-
     public void Move()
     {
         if (_path == null || _path.Count == 0)
         {
             Debug.LogWarning("No path found or path is empty.");
+            _caster.ChangeState(Define.BehaviourState.Idle);
             return;
         }
         
         if (_currentTileIndex >= _path.Count)
         {
+            _currentTileIndex = 0;
             _accessibleTiles = null;
             _targetTile = null;
             _path = null;
-            SetStateByCommandType(Define.CommandType.Idle);
+            Debug.Log($"Move to Idle Animation");
+            _caster.ChangeState(Define.BehaviourState.Idle);
             return;
         }
         
@@ -106,12 +104,14 @@ public class BasicMove : ACommandBehaviour, IMove, ITarget
             
             if (direction != Vector3.zero)
             {
-                Quaternion lookRotation = Quaternion.LookRotation(direction);
-                _caster.transform.rotation = Quaternion.Slerp(_caster.transform.rotation, lookRotation, _rotationSpeed * Time.deltaTime);
+                Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0f, direction.z));
+                Quaternion targetRotation = lookRotation * GameManager.Instance.defaultRotationValue;
+                _caster.transform.rotation = Quaternion.Slerp(_caster.transform.rotation, targetRotation, _rotationSpeed * Time.deltaTime);
             }
         }
         else
         {
+            _caster._characterData.CurrentTile = _path[_currentTileIndex];
             _currentTileIndex++;
         }
     }
@@ -125,7 +125,7 @@ public class BasicMove : ACommandBehaviour, IMove, ITarget
         }
         
         // PathFinding을 통해 접근 가능한 타일 목록을 가져옵니다.
-        return _accessibleTiles = _pathFinding.GetReachableTiles(caster.GetCurrentTile(), inputRange, tileMap);
+        return _accessibleTiles = _pathFinding.GetReachableTiles(caster._characterData.CurrentTile, inputRange, tileMap);
     }
 
     public List<Tile> FindPathToTarget(Character caster, Tile targetTile, TileMap tileMap)
@@ -137,40 +137,40 @@ public class BasicMove : ACommandBehaviour, IMove, ITarget
         }
 
         // PathFinding을 통해 최단 경로를 찾습니다.
-        return _pathFinding.FindPath(caster.GetCurrentTile(), targetTile, tileMap, _accessibleTiles);
+        return _pathFinding.FindPath(caster._characterData.CurrentTile, targetTile, tileMap, _accessibleTiles);
     }
 
-    private IEnumerator MoveAlongPath(Character caster, List<Tile> path, TileMap tileMap)
-    {
-        if (path == null || path.Count == 0)
-        {
-            Debug.LogWarning("No path found or path is empty.");
-            yield break;
-        }
-
-        // 경로를 따라 이동하기
-        foreach (var tile in path)
-        {
-            Vector3 targetPosition = tileMap.GetWorldPositionByTile(tile);
-            while (Vector3.Distance(caster.transform.position, targetPosition) > 0.01f)
-            {
-                caster.transform.position = Vector3.MoveTowards(caster.transform.position, targetPosition, _moveSpeed * Time.deltaTime);
-                
-                Vector3 direction = (targetPosition - caster.transform.position).normalized;
-                
-                if (direction != Vector3.zero)
-                {
-                    Quaternion lookRotation = Quaternion.LookRotation(direction);
-                    caster.transform.rotation = Quaternion.Slerp(caster.transform.rotation, lookRotation,  _rotationSpeed * Time.deltaTime);
-                }
-                yield return null;
-            }
-        }
-
-        caster.transform.position = tileMap.GetWorldPositionByTile(path[path.Count - 1]);
-        _accessibleTiles = null;
-        _targetTile = null;
-    }
+    // private IEnumerator MoveAlongPath(Character caster, List<Tile> path, TileMap tileMap)
+    // {
+    //     if (path == null || path.Count == 0)
+    //     {
+    //         Debug.LogWarning("No path found or path is empty.");
+    //         yield break;
+    //     }
+    //
+    //     // 경로를 따라 이동하기
+    //     foreach (var tile in path)
+    //     {
+    //         Vector3 targetPosition = tileMap.GetWorldPositionByTile(tile);
+    //         while (Vector3.Distance(caster.transform.position, targetPosition) > 0.01f)
+    //         {
+    //             caster.transform.position = Vector3.MoveTowards(caster.transform.position, targetPosition, _moveSpeed * Time.deltaTime);
+    //             
+    //             Vector3 direction = (targetPosition - caster.transform.position).normalized;
+    //             
+    //             if (direction != Vector3.zero)
+    //             {
+    //                 Quaternion lookRotation = Quaternion.LookRotation(direction);
+    //                 caster.transform.rotation = Quaternion.Slerp(caster.transform.rotation, lookRotation,  _rotationSpeed * Time.deltaTime);
+    //             }
+    //             yield return null;
+    //         }
+    //     }
+    //
+    //     caster.transform.position = tileMap.GetWorldPositionByTile(path[path.Count - 1]);
+    //     _accessibleTiles = null;
+    //     _targetTile = null;
+    // }
     
     public Tile GetTarget()
     {

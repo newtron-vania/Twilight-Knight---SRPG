@@ -23,7 +23,7 @@ public class BasicAttack : ACommandBehaviour, ITarget
     {
         get
         {
-            if (_animationClipData == null) { _animationClipData = DataManager.Instance.AnimationData["BasickAttack"]; }
+            if (_animationClipData == null) { _animationClipData = DataManager.Instance.AnimationData["BasicAttack"]; }
             return _animationClipData;
         }
     }
@@ -33,6 +33,9 @@ public class BasicAttack : ACommandBehaviour, ITarget
     private IPathFinding _pathFinding; // PathFinding 인스턴스를 참조할 변수
     private List<Tile> _accessibleTiles; // 접근 가능한 타일
     private float _commandDamage = 1f;
+    private float _currentTime = 0f;
+    private float _rotationSpeed = 10f;
+    private bool eventActive = false;
     
     public int Damage
     {
@@ -42,16 +45,27 @@ public class BasicAttack : ACommandBehaviour, ITarget
 
     public override void Execute()
     {
-        _caster.PlayAnimation(CommandType.ToString(), 0f);
+        Debug.Log($"Attack Play");
+        
+        GetAccessibleTiles(_caster, Range, GameManager.Instance.getTileMap()); // 테스트
+
+        foreach (var varialble in _accessibleTiles)
+        {
+            Debug.Log($"_accessibleTile : {varialble.x}, {varialble.y}, {varialble.z}");
+        }
+        
+        if (_targetTile == null || (!_accessibleTiles.Contains(_targetTile)))
+        {
+            return;
+        }
+        
         SetStateByCommandType(CommandType);
+        eventActive = false;
     }
 
     public override void OnUpdate()
     {
-        if (!_caster.IsAnimationPlaying())
-        {
-            _caster.CharacterState = Define.BehaviourState.Idle;
-        }
+        Attack();
     }
 
     public override bool Undo()
@@ -66,29 +80,44 @@ public class BasicAttack : ACommandBehaviour, ITarget
         return false;
     }
 
-    public override void SetAnimationEvent()
+    private void Attack()
     {
-        AnimationEvent animationEvent = new AnimationEvent();
-
-        animationEvent.functionName = "Attack";
-        animationEvent.time = 0.05f;
-        AnimationClipData.animationClip.AddEvent(animationEvent);
-    }
-
-    public void Attack()
-    {
-        if (_targetTile == null || (!_accessibleTiles.Contains(_targetTile)))
+        if (_currentTime >= 0.05f && !eventActive)
         {
+            if (_targetTile == null || (!_accessibleTiles.Contains(_targetTile)))
+            {
+                return;
+            }
+
+            TileMap tileMap = GameManager.Instance.getTileMap();
+            Vector3 targetPosition = tileMap.GetWorldPositionByTile(_targetTile);
+            Vector3 direction = (targetPosition - _caster.transform.position).normalized;
+            
+            if (_targetTile.tileObject.TryGetComponent<Character>(out Character targetCharacter))
+            {
+                Debug.Log("target " + targetCharacter.name + "Attack!");
+                
+                Quaternion targetRotation = Quaternion.LookRotation(new Vector3(direction.x, 0f, direction.z));
+                _caster.transform.rotation = targetRotation *  GameManager.Instance.defaultRotationValue;
+                targetCharacter.TakeDamage(Damage);
+            }
+
+            eventActive = true;
             return;
         }
 
-        if (_targetTile.tileObject.TryGetComponent<Character>(out Character targetCharacter))
+        _currentTime += Time.deltaTime;
+        
+        if (eventActive && !_caster.IsAnimationPlaying(CommandType.ToString()))
         {
-            targetCharacter.TakeDamage(Damage);
+            if( !_caster.IsAnimationPlaying(CommandType.ToString()))
+                if (!_caster.IsAnimationPlaying(CommandType.ToString()))
+                {
+                    _targetTile = null;
+                    SetStateByCommandType(Define.CommandType.Idle);
+                }
+            
         }
-
-        _targetTile = null;
-        _pathFinding = null;
     }
     
     public List<Tile> GetAccessibleTiles(Character caster, int inputRange, TileMap tileMap)
@@ -98,7 +127,7 @@ public class BasicAttack : ACommandBehaviour, ITarget
             _pathFinding = new SimpleAStar();
         }
 
-        return _accessibleTiles = _pathFinding.GetReachableTiles(caster.GetCurrentTile(), inputRange, tileMap);
+        return _accessibleTiles = _pathFinding.GetAttackableTiles(caster._characterData.CurrentTile, inputRange, tileMap);
     }
 
     public Tile GetTarget()

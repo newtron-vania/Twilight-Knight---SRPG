@@ -32,8 +32,11 @@ public class CharacterData : MonoBehaviour
         get => currentTile;
         set
         {
+            TileMap tileMap = GameManager.Instance.getTileMap();
+            tileMap.SetTileObject(currentTile, null);
             currentTile = value;
-            transform.position = GameManager.Instance.getTileMap().GetWorldPositionByTile(currentTile.x, currentTile.y, currentTile.z) - new Vector3(0, 0.5f, 0);
+            tileMap.SetTileObject(currentTile, gameObject);
+            transform.position = GameManager.Instance.getTileMap().GetWorldPositionByTile(currentTile);
         }
     }
 }

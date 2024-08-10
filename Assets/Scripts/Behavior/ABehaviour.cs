@@ -35,13 +35,12 @@ public abstract class ACommandBehaviour
         {
             return false;
         }
-
+        _caster = caster;
         _commandType = state;
-        SetAnimationEvent();
+        _caster.ChangeAnimationClip(CommandType.ToString(), AnimationClipData);
         return true;
     }
 
-    public abstract void SetAnimationEvent();
 
     protected void SetStateByCommandType(Define.CommandType type)
     {
@@ -51,16 +50,16 @@ public abstract class ACommandBehaviour
         switch (type)
         {
             case Define.CommandType.Idle:
-                _caster.CharacterState = Define.BehaviourState.Idle;
+                _caster.ChangeState(Define.BehaviourState.Idle);
                 break;
             case Define.CommandType.Attack:
-                _caster.CharacterState = Define.BehaviourState.Attack;
+                _caster.ChangeState(Define.BehaviourState.Attack);
                 break;
             case Define.CommandType.Move:
-                _caster.CharacterState = Define.BehaviourState.Move;
+                _caster.ChangeState(Define.BehaviourState.Move);
                 break;
             case Define.CommandType.Skill:
-                _caster.CharacterState = Define.BehaviourState.Skill;
+                _caster.ChangeState(Define.BehaviourState.Skill);
                 break;
         }
         return;

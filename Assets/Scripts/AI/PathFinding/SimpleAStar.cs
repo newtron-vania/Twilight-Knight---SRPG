@@ -50,6 +50,12 @@ public class SimpleAStar : IPathFinding
                 gCost[neighbor] = tentativeGCost;
                 fCost[neighbor] = gCost[neighbor] + GetHeuristic(neighbor, targetTile);
             }
+
+            Debug.Log($"Openset Count : {openSet.Count}");
+            foreach (var VARIABLE in openSet)
+            {
+                Debug.Log($"Tile in Openset: ({VARIABLE.x}, {VARIABLE.y}, {VARIABLE.z})");
+            }
         }
 
         return new List<Tile>();
@@ -81,7 +87,33 @@ public class SimpleAStar : IPathFinding
 
         return reachableTiles;
     }
-    
+
+    public List<Tile> GetAttackableTiles(Tile startTile, int Range, TileMap tileMap)
+    {
+        List<Tile> reachableTiles = new List<Tile>();
+        Queue<Tile> queue = new Queue<Tile>();
+        HashSet<Tile> visited = new HashSet<Tile>();
+
+        queue.Enqueue(startTile);
+        visited.Add(startTile);
+
+        while (queue.Count > 0)
+        {
+            Tile current = queue.Dequeue();
+            reachableTiles.Add(current);
+
+            foreach (var neighbor in GetNeighbors(current, tileMap))
+            {
+                if (!visited.Contains(neighbor) && GetDistance(startTile, neighbor) <= Range)
+                {
+                    queue.Enqueue(neighbor);
+                    visited.Add(neighbor);
+                }
+            }
+        }
+
+        return reachableTiles;
+    }
     private Tile GetTileWithLowestFCost(List<Tile> openSet, Dictionary<Tile, float> fCost)
     {
         Tile lowest = openSet[0];
@@ -104,6 +136,7 @@ public class SimpleAStar : IPathFinding
             path.Add(current);
         }
         path.Reverse();
+        
         return path;
     }
 

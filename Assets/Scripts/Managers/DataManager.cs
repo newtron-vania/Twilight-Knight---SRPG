@@ -20,7 +20,7 @@ public class DataManager : Singleton<DataManager>
     protected override void Init()
     {
         base.Init();
-        AnimationData = LoadScriptableObjects<AnimationDataSO>("O/AnimationDataSO/");
+        AnimationData = LoadScriptableObjects<AnimationDataSO>("SO/AnimationData/");
     }
     
     Loader LoadJson<Loader, Key, Value>(string path) where Loader : ILoader<Key, Value>
@@ -38,6 +38,7 @@ public class DataManager : Singleton<DataManager>
             dict.Add(asset.name, asset);
         }
 
+        Debug.Log("SkillScriptableObject Load Complete");
         return dict;
     }
 }

@@ -5,6 +5,7 @@ using UnityEngine.Tilemaps;
 
 public class GameManager : Singleton<GameManager>
 {
+    public Quaternion defaultRotationValue = Quaternion.Euler(0, -90, 0);
     private TileMap TileMap;
     
     public TileMap getTileMap()
@@ -25,7 +26,7 @@ public class GameManager : Singleton<GameManager>
     private Dictionary<int, Character> characters = new Dictionary<int, Character>();
     private int playerCharacterCount = 0;
     private int enemyCharacterCount = 0;
-    private string defaultCharactername = "MaleCharacterPBR";
+    private string defaultCharactername = "MaleWorrior";
     private Character CreateCharacter(bool isPlayerCharacter, string characterName = null)
     {
         GameObject characterObject;
@@ -46,7 +47,7 @@ public class GameManager : Singleton<GameManager>
             }
         }
 
-        Character character = characterObject.AddComponent<Character>();
+        Character character = characterObject.GetOrAddComponent<Character>();
         int characterId = isPlayerCharacter ? (1 << 8) + playerCharacterCount++ : enemyCharacterCount++;
         character.Initialize(characterId);
         return character;

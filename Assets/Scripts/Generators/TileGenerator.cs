@@ -41,9 +41,9 @@ public class TileGenerator : MonoBehaviour
         GameObject TileMap = new GameObject("TileMap");
       
         TileMap.transform.position = Vector3.zero;
-        for (int y = 0; y < height; y++)
+        for (int x = 0; x < width; x++)
         {
-            for (int x = 0; x < width; x++)
+            for (int y = 0; y < height; y++)
             {
                 GameObject tileObject = Instantiate(Tile, new Vector3(-height / 2f + padding * y, 0f, -width / 2f + padding * x), Quaternion.identity, TileMap.transform);
                 Tile tile = tileMap.GetTile(x, y, 0);

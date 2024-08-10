@@ -12,14 +12,16 @@ public class CharacterGenerator : MonoBehaviour
     {
         TileMap tileMap = GameManager.Instance.getTileMap();
         
-        GameObject go = Instantiate(playerCharacter);
-        GameManager.Instance.getTileMap().SetTileObject(4,0,1,playerCharacter);
-        go.transform.position = tileMap.GetWorldPositionByTile(4, 0, 1) - new Vector3(0, 0.5f, 0);
-        go.transform.localRotation = Quaternion.Euler(0, 90, 0); // 정면
+        Character character = GameManager.Instance.AddCharacter(true, "MaleWorrior");
+        GameManager.Instance.getTileMap().SetTileObject(4,0,1,character.gameObject);
+        character._characterData.CurrentTile = new Tile(4, 0, 1);
+        character.transform.position = tileMap.GetWorldPositionByTile(4, 0, 1);
+
         
-        go = Instantiate(playerCharacter);
-        GameManager.Instance.getTileMap().SetTileObject(4,6,1,playerCharacter);
-        go.transform.position = tileMap.GetWorldPositionByTile(4, 6, 1) - new Vector3(0, 0.5f, 0);;
-        go.transform.localRotation = Quaternion.Euler(0, -90, 0); // 정면
+        character = GameManager.Instance.AddCharacter(false, "FeMaleWorrior");
+        GameManager.Instance.getTileMap().SetTileObject(4,1,1,character.gameObject);
+        character._characterData.CurrentTile = new Tile(4, 1, 1);
+        character.transform.position = tileMap.GetWorldPositionByTile(4, 1, 1);;
+        character.transform.localRotation = Quaternion.Euler(0, -180, 0); // 정면
     }
 }

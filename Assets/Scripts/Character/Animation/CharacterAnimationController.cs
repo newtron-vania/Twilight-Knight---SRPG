@@ -17,16 +17,18 @@ public class CharacterAnimationController : MonoBehaviour
         animator.runtimeAnimatorController = overrideController;
     }
 
-    public void Play(string animationName, float normalizedTime = 0f)
+    public void Play(string animationName, int layer, float normalizedTime)
     {
-        animator.Play(animationName, -1, normalizedTime);
-    }
-    
-    public bool IsAnimationPlaying(string animationName)
-    {
-        return animator.GetCurrentAnimatorStateInfo(0).IsName(animationName);
+        animator.Play(animationName, layer, normalizedTime);
     }
 
+    public void Play(string animationName)
+    {
+        animator.Play(animationName);
+        Debug.Log($"Animation name : {animationName}");
+    }
+    
+    
     public void ReplaceAnimation(string originalClipName, AnimationClip newClip)
     {
         // 오리지널 클립을 새 클립으로 오버라이드
@@ -45,10 +47,15 @@ public class CharacterAnimationController : MonoBehaviour
         overrideController.ApplyOverrides(overrides);
     }
 
-    public bool IsAnimationPlaying()
+    public float GetAnimationNormalizedTime()
+    {
+        return animator.GetCurrentAnimatorStateInfo(0).normalizedTime;
+    }
+    
+    public bool IsAnimationPlaying(string animationName)
     {
         var animInfo = animator.GetCurrentAnimatorStateInfo(0);
-        if (animInfo.normalizedTime >= 0 && animInfo.normalizedTime < 1f) return true;
-        return false;
+        if (animInfo.IsName(animationName) && animInfo.normalizedTime >= 1f) return false;
+        return true;
     }
 }

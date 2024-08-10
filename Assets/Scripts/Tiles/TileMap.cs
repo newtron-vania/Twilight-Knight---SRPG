@@ -55,6 +55,14 @@ public class TileMap
             tiles[x,y,z].tileObject = tileObject;
         }
     }
+    
+    public void SetTileObject(Tile tile, GameObject tileObject)
+    {
+        if (IsPositionValid(tile.x, tile.y, tile.z))
+        {
+            tiles[tile.x,tile.y,tile.z].tileObject = tileObject;
+        }
+    }
 
     // 타일 데이터 반환
     public Tile GetTile(int x, int y, int z)
@@ -64,7 +72,7 @@ public class TileMap
 
     public Vector3 GetWorldPositionByTile(int x, int y, int z)
     {
-        return WorldPositionOfZero + new Vector3(y * Padding, z * Padding, x * Padding);
+        return WorldPositionOfZero + new Vector3(y * Padding,z * Padding, x * Padding);
     }
     
     public Vector3 GetWorldPositionByTile(Tile tile)
@@ -75,8 +83,8 @@ public class TileMap
     public Tile GetTileByWorldPosition(Vector3 worldPosition)
     {
         int x = Mathf.FloorToInt((worldPosition.z - WorldPositionOfZero.z) / Padding);
-        int y = Mathf.FloorToInt((worldPosition.x - WorldPositionOfZero.x) / Padding);
-        int z = Mathf.FloorToInt((worldPosition.y - WorldPositionOfZero.y) / Padding);
+        int y = Mathf.FloorToInt((worldPosition.x + WorldPositionOfZero.x) / Padding);
+        int z = Mathf.FloorToInt((worldPosition.y + WorldPositionOfZero.y) / Padding);
 
         return GetTile(x, y, z);
     }
