@@ -1,42 +1,30 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
-using UnityEngine;
+using Data;
 
 public abstract class ACommandBehaviour
 {
-    public abstract int BehaviourId { get; }
+    protected AnimationDataSO _animationClipData;
 
-    private Define.CommandType _commandType = Define.CommandType.None;
-    public Define.CommandType CommandType
-    {
-        get { return _commandType; }
-    }
+    protected Character _caster;
 
     protected int _minValue = -99;
     protected int _range = -99;
+    public abstract int BehaviourId { get; }
 
-    public abstract int Range { get;}
+    public Define.CommandType CommandType { get; private set; } = Define.CommandType.None;
 
-    protected Data.AnimationDataSO _animationClipData;
-    public abstract Data.AnimationDataSO AnimationClipData { get; }
+    public abstract int Range { get; }
+    public abstract AnimationDataSO AnimationClipData { get; }
     public abstract void Execute();
 
     public abstract void OnUpdate();
 
     public abstract bool Undo();
-    
-    protected Character _caster;
 
     public bool Init(Character caster, Define.CommandType state)
     {
-        if (caster == null)
-        {
-            return false;
-        }
+        if (caster == null) return false;
         _caster = caster;
-        _commandType = state;
+        CommandType = state;
         _caster.ChangeAnimationClip(CommandType.ToString(), AnimationClipData);
         return true;
     }
@@ -46,7 +34,7 @@ public abstract class ACommandBehaviour
     {
         if (_caster == null || type == Define.CommandType.None)
             return;
-        
+
         switch (type)
         {
             case Define.CommandType.Idle:
@@ -62,6 +50,5 @@ public abstract class ACommandBehaviour
                 _caster.ChangeState(Define.BehaviourState.Skill);
                 break;
         }
-        return;
     }
 }

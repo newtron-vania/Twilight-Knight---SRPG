@@ -1,17 +1,15 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class UIManager : Singleton<UIManager>
 {
+    private readonly Dictionary<Define.PopupUIGroup, Stack<UI_Popup>> _popupStackDict = new();
     private int _order = 10;
-
-    private Dictionary<Define.PopupUIGroup, Stack<UI_Popup>> _popupStackDict = new Dictionary<Define.PopupUIGroup, Stack<UI_Popup>>();
-    private UI_Scene _sceneUI = null;
+    private UI_Scene _sceneUI;
 
     public GameObject Root()
     {
-        GameObject root = GameObject.Find("@UI_Root");
+        var root = GameObject.Find("@UI_Root");
         if (root == null)
             root = new GameObject { name = "@UI_Root" };
 
@@ -20,7 +18,7 @@ public class UIManager : Singleton<UIManager>
 
     public void SetCanvas(GameObject go, bool sorting = false)
     {
-        Canvas canvas = go.GetOrAddComponent<Canvas>();
+        var canvas = go.GetOrAddComponent<Canvas>();
         canvas.renderMode = RenderMode.ScreenSpaceOverlay;
         canvas.overrideSorting = true;
 
@@ -29,53 +27,54 @@ public class UIManager : Singleton<UIManager>
         else
             canvas.sortingOrder = 0;
     }
-    
+
     public T MakeWorldSpaceUI<T>(Transform parent, string name = null) where T : UI_Base
     {
         if (string.IsNullOrEmpty(name))
             name = typeof(T).Name;
 
-        GameObject go = ResourceManager.Instance.Instantiate($"UI/WorldSpace/{name}");
+        var go = ResourceManager.Instance.Instantiate($"UI/WorldSpace/{name}");
 
         if (parent != null)
             go.transform.SetParent(parent);
 
-        Canvas canvas = go.GetComponent<Canvas>();
+        var canvas = go.GetComponent<Canvas>();
         canvas.renderMode = RenderMode.WorldSpace;
         canvas.worldCamera = Camera.main;
 
         //return go.GetOrAddComponent<T>();
         return Util.GetOrAddComponent<T>(go);
     }
-    
+
     public T MakeSubItem<T>(Transform parent, string name = null) where T : UI_Base
     {
         if (string.IsNullOrEmpty(name))
             name = typeof(T).Name;
 
-        GameObject go = ResourceManager.Instance.Instantiate($"UI/SubItem/{name}");
+        var go = ResourceManager.Instance.Instantiate($"UI/SubItem/{name}");
 
-        if(parent != null)
+        if (parent != null)
             go.transform.SetParent(parent);
 
         return go.GetOrAddComponent<T>();
     }
-    
+
     public T ShowSceneUI<T>(string name = null) where T : UI_Scene
     {
         if (string.IsNullOrEmpty(name))
             name = typeof(T).Name;
 
 
-        GameObject go = ResourceManager.Instance.Instantiate($"UI/Scene/{name}");
+        var go = ResourceManager.Instance.Instantiate($"UI/Scene/{name}");
 
-        T sceneUI = Util.GetOrAddComponent<T>(go);
+        var sceneUI = Util.GetOrAddComponent<T>(go);
         _sceneUI = sceneUI;
 
 
         go.transform.SetParent(Root().transform);
         return sceneUI;
     }
+
     public UI_Scene getSceneUI()
     {
         return _sceneUI;
@@ -86,32 +85,32 @@ public class UIManager : Singleton<UIManager>
         if (string.IsNullOrEmpty(name))
             name = typeof(T).Name;
 
-        GameObject go = ResourceManager.Instance.Instantiate($"UI/Popup/{name}");
-        
+        var go = ResourceManager.Instance.Instantiate($"UI/Popup/{name}");
+
         go.transform.SetParent(Root().transform);
-        
-        T popup =  go.GetOrAddComponent<T>();
-        Define.PopupUIGroup popupType = popup.PopupID;
+
+        var popup = go.GetOrAddComponent<T>();
+        var popupType = popup.PopupID;
 
         if (!_popupStackDict.ContainsKey(popupType))
             _popupStackDict.Add(popupType, new Stack<UI_Popup>());
-            
+
         _popupStackDict[popupType].Push(popup);
 
         if (forEffect)
             popup.GetComponent<Canvas>().sortingOrder = -1;
 
 
-        return popup as T;
+        return popup;
     }
 
     public void ClosePopupUI(Define.PopupUIGroup popupType)
     {
-        if (!_popupStackDict.TryGetValue(popupType, out Stack<UI_Popup> popupStack)
+        if (!_popupStackDict.TryGetValue(popupType, out var popupStack)
             || _popupStackDict[popupType].Count == 0)
             return;
 
-        UI_Popup popup = _popupStackDict[popupType].Pop();
+        var popup = _popupStackDict[popupType].Pop();
         ResourceManager.Instance.Destroy(popup.gameObject);
         _order--;
         popup = null;
@@ -121,8 +120,8 @@ public class UIManager : Singleton<UIManager>
 
     public void ClosePopupUI(UI_Popup popup)
     {
-        Define.PopupUIGroup popupType = popup.PopupID;
-        if (!_popupStackDict.TryGetValue(popupType, out Stack<UI_Popup> popupStack)
+        var popupType = popup.PopupID;
+        if (!_popupStackDict.TryGetValue(popupType, out var popupStack)
             || _popupStackDict[popupType].Count == 0)
             return;
 
@@ -134,69 +133,64 @@ public class UIManager : Singleton<UIManager>
 
         ClosePopupUI(popupType);
     }
+
     public void CloseAllPopupUI()
     {
-        foreach (KeyValuePair<Define.PopupUIGroup, Stack<UI_Popup>> kv in _popupStackDict)
+        foreach (var kv in _popupStackDict)
         {
-            Define.PopupUIGroup popupType = kv.Key;
-            Stack<UI_Popup> popupStack = kv.Value;
-            while(popupStack.Count != 0)
+            var popupType = kv.Key;
+            var popupStack = kv.Value;
+            while (popupStack.Count != 0)
             {
-                UI_Popup popup = popupStack.Pop();
+                var popup = popupStack.Pop();
                 ResourceManager.Instance.Destroy(popup.gameObject);
                 _order--;
                 popup = null;
             }
         }
+
         CheckPopupUICountAndRemove();
     }
 
     public void CloseAllGroupPopupUI(Define.PopupUIGroup popupType)
     {
-        if (!_popupStackDict.TryGetValue(popupType, out Stack<UI_Popup> popupStack)
+        if (!_popupStackDict.TryGetValue(popupType, out var popupStack)
             || _popupStackDict[popupType].Count == 0)
             return;
 
         while (popupStack.Count != 0)
         {
-            UI_Popup popup = popupStack.Pop();
+            var popup = popupStack.Pop();
             ResourceManager.Instance.Destroy(popup.gameObject);
             _order--;
             popup = null;
         }
+
         CheckPopupUICountAndRemove();
     }
 
 
-    void CheckPopupUICountAndRemove()
+    private void CheckPopupUICountAndRemove()
     {
-        List<Define.PopupUIGroup> popupType = new List<Define.PopupUIGroup>();
-        foreach(Define.PopupUIGroup popupUI in _popupStackDict.Keys)
-        {
-            popupType.Add(popupUI);
-        }
-        for(int i = 0; i<_popupStackDict.Count; i++)
-        {
-            if (_popupStackDict.GetValueOrDefault<Define.PopupUIGroup, Stack<UI_Popup>>(popupType[i]).Count == 0)
+        var popupType = new List<Define.PopupUIGroup>();
+        foreach (var popupUI in _popupStackDict.Keys) popupType.Add(popupUI);
+        for (var i = 0; i < _popupStackDict.Count; i++)
+            if (_popupStackDict.GetValueOrDefault(popupType[i]).Count == 0)
                 _popupStackDict.Remove(popupType[i]);
-        }
         CheckPopupUICountInScene();
     }
-    
-    void CheckPopupUICountInScene()
-    {
 
+    private void CheckPopupUICountInScene()
+    {
         Debug.Log($"popupCount : {_popupStackDict.Count}");
-        foreach(Define.PopupUIGroup popupKey in _popupStackDict.Keys)
-        {
-            Debug.Log($"popupList : {popupKey}");
-        }
+        foreach (var popupKey in _popupStackDict.Keys) Debug.Log($"popupList : {popupKey}");
     }
 
     public int GetPopupUICount()
     {
         return _popupStackDict.Count;
     }
+
     public void Clear()
     {
         CloseAllPopupUI();

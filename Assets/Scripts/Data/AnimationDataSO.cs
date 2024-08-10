@@ -1,8 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-
 
 namespace Data
 {
@@ -14,9 +10,9 @@ namespace Data
 
         public AnimationDataSO Clone()
         {
-            AnimationDataSO data = new AnimationDataSO();
-            data.animationName = this.animationName;
-            data.animationClip = this.animationClip;
+            var data = new AnimationDataSO();
+            data.animationName = animationName;
+            data.animationClip = animationClip;
 
             return data;
         }

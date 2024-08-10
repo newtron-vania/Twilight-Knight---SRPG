@@ -185,7 +185,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &106094640
 RectTransform:
   m_ObjectHideFlags: 0
@@ -665,6 +665,7 @@ MonoBehaviour:
   padding: 1
   bTesting: 1
   Tile: {fileID: 7571593481815099887, guid: 3f376b2e872a841e39e68629d12fe56d, type: 3}
+  test: {fileID: 1885914907}
 --- !u!4 &1402467051
 Transform:
   m_ObjectHideFlags: 0
@@ -832,7 +833,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1458271321
 RectTransform:
   m_ObjectHideFlags: 0
@@ -963,7 +964,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1880390208
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1005,6 +1006,7 @@ GameObject:
   - component: {fileID: 1885914905}
   - component: {fileID: 1885914904}
   - component: {fileID: 1885914906}
+  - component: {fileID: 1885914907}
   m_Layer: 5
   m_Name: TestUI
   m_TagString: Untagged
@@ -1078,13 +1080,27 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1885914902}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ac8975ba49a0b46edacf24c988b8aebc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _character: {fileID: 0}
   pos: 040000000100000001000000
+--- !u!114 &1885914907
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1885914902}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc13db9e569c64cff8f767687dc3cb1a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  testCharacter: {fileID: 0}
+  testCharacterOfCharacer: {fileID: 0}
 --- !u!1 &2005941128
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,14 +1,28 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class Define
+﻿public class Define
 {
-    public enum WorldObject
+    public enum BehaviourState
     {
-        Unknown,
-        Player,
-        Enemy
+        None,
+        Idle,
+        Waiting,
+        Attack,
+        Move,
+        Skill,
+        Hit,
+        Die
+    }
+
+    public enum BGMs
+    {
+    }
+
+    public enum CommandType
+    {
+        None,
+        Idle,
+        Attack,
+        Move,
+        Skill
     }
 
     public enum PopupUIGroup
@@ -23,28 +37,6 @@ public class Define
         UI_CharacterSelect
     }
 
-    public enum SceneUI
-    {
-        Unknown,
-        UI_Player,
-        UI_MainMenu,
-    }
-
-    public enum Sound
-    {
-        bgm,
-        effect,
-        MaxCount,
-    }
-    public enum BGMs
-    {
-        
-    }
-    public enum UIEvent
-    {
-        Click,
-        Drag,
-    }
     public enum SceneType
     {
         Unknown,
@@ -52,24 +44,30 @@ public class Define
         MainMenuScene
     }
 
-    public enum CommandType
+    public enum SceneUI
     {
-        None,
-        Idle,
-        Attack,
-        Move,
-        Skill
+        Unknown,
+        UI_Player,
+        UI_MainMenu
     }
-    
-    public enum BehaviourState
+
+    public enum Sound
     {
-        None,
-        Idle,
-        Waiting,
-        Attack,
-        Move,
-        Skill,
-        Hit,
-        Die,
+        bgm,
+        effect,
+        MaxCount
+    }
+
+    public enum UIEvent
+    {
+        Click,
+        Drag
+    }
+
+    public enum WorldObject
+    {
+        Unknown,
+        Player,
+        Enemy
     }
 }

@@ -47,7 +47,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf791726b2a4342f9aed39adfb4605a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _characterState: 1
   _characterData: {fileID: 0}
+  currentTime: 0
+  MaxdeathTime: 3
 --- !u!114 &1889502374413915956
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -357,6 +360,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 9036980633323257398, guid: a032fa1c71a5b4b2fa5c84bce40eaa93, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 7789bc3f09a7b4136826d359f145ee68, type: 2}
     - target: {fileID: 9105106661575754179, guid: a032fa1c71a5b4b2fa5c84bce40eaa93, type: 3}
       propertyPath: m_Layer
       value: 10

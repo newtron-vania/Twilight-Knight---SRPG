@@ -7,27 +7,24 @@ public class CameraFollowHighlight : MonoBehaviour
 
     private Camera mainCamera;
 
-    void Start()
+    private void Start()
     {
         mainCamera = Camera.main;
 
-        if (mainCamera == null)
-        {
-            Debug.LogError("Main camera not assigned and no camera with 'MainCamera' tag found.");
-        }
-        
+        if (mainCamera == null) Debug.LogError("Main camera not assigned and no camera with 'MainCamera' tag found.");
+
         highlightPoint = mainCamera.transform.position;
     }
 
-    void Update()
+    private void Update()
     {
         if (mainCamera == null || highlightPoint == null) return;
 
         // 카메라의 현재 위치
-        Vector3 cameraPosition = mainCamera.transform.position;
+        var cameraPosition = mainCamera.transform.position;
 
         // 목표 위치 계산 (카메라의 z 위치는 유지하고 x, y 좌표만 이동)
-        Vector3 targetPosition = new Vector3(highlightPoint.x, highlightPoint.y, cameraPosition.z);
+        var targetPosition = new Vector3(highlightPoint.x, highlightPoint.y, cameraPosition.z);
 
         // 카메라를 하이라이트 포인트 방향으로 일정 속도로 이동
         mainCamera.transform.position = Vector3.Lerp(cameraPosition, targetPosition, moveSpeed * Time.deltaTime);

@@ -1,6 +1,5 @@
-using System.Collections.Generic;
-using UnityEngine;
 using System;
+using System.Collections.Generic;
 
 public abstract class BTNode
 {
@@ -26,7 +25,7 @@ public abstract class BTNode
 
 public abstract class CompositeNode : BTNode
 {
-    protected List<BTNode> children = new List<BTNode>();
+    protected List<BTNode> children = new();
 
     public CompositeNode(List<BTNode> children)
     {
@@ -36,19 +35,22 @@ public abstract class CompositeNode : BTNode
 
 public class Selector : CompositeNode
 {
-    public Selector(List<BTNode> children) : base(children) { }
+    public Selector(List<BTNode> children) : base(children)
+    {
+    }
 
     public override State Execute()
     {
-        foreach (BTNode child in children)
+        foreach (var child in children)
         {
-            State result = child.Execute();
+            var result = child.Execute();
             if (result == State.Success)
             {
                 currentState = State.Success;
                 return currentState;
             }
-            else if (result == State.Running)
+
+            if (result == State.Running)
             {
                 currentState = State.Running;
                 return currentState;
@@ -62,24 +64,24 @@ public class Selector : CompositeNode
 
 public class Sequence : CompositeNode
 {
-    public Sequence(List<BTNode> children) : base(children) { }
+    public Sequence(List<BTNode> children) : base(children)
+    {
+    }
 
     public override State Execute()
     {
-        bool anyChildRunning = false;
+        var anyChildRunning = false;
 
-        foreach (BTNode child in children)
+        foreach (var child in children)
         {
-            State result = child.Execute();
+            var result = child.Execute();
             if (result == State.Failure)
             {
                 currentState = State.Failure;
                 return currentState;
             }
-            else if (result == State.Running)
-            {
-                anyChildRunning = true;
-            }
+
+            if (result == State.Running) anyChildRunning = true;
         }
 
         currentState = anyChildRunning ? State.Running : State.Success;
@@ -90,7 +92,7 @@ public class Sequence : CompositeNode
 
 public class ActionNode : BTNode
 {
-    private Func<State> action;
+    private readonly Func<State> action;
 
     public ActionNode(Func<State> action)
     {
@@ -100,13 +102,9 @@ public class ActionNode : BTNode
     public override State Execute()
     {
         if (action != null)
-        {
             currentState = action.Invoke();
-        }
         else
-        {
             currentState = State.Failure;
-        }
 
         return currentState;
     }

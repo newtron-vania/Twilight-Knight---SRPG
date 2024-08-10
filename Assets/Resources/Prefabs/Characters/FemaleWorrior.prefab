@@ -47,7 +47,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf791726b2a4342f9aed39adfb4605a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _characterState: 1
   _characterData: {fileID: 0}
+  currentTime: 0
+  MaxdeathTime: 3
 --- !u!114 &1256622274704755164
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -321,6 +324,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 10
       objectReference: {fileID: 0}
+    - target: {fileID: 7413344840680693326, guid: 6d51facd47711463586bcfa5e60301d4, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 7789bc3f09a7b4136826d359f145ee68, type: 2}
     - target: {fileID: 7647134206250791342, guid: 6d51facd47711463586bcfa5e60301d4, type: 3}
       propertyPath: m_Name
       value: FemaleCharacterPBR
