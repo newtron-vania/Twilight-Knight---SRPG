@@ -1,4 +1,6 @@
+using Modules.EventSystem;
 using UnityEngine;
+using EventType = Modules.EventSystem.EventType;
 
 public class CameraFollowHighlight : MonoBehaviour
 {

@@ -70,4 +70,12 @@
         Player,
         Enemy
     }
+    
+    public enum TouchEvent
+    {
+        TouchBegin,
+        Touch,
+        Drag,
+        TouchEnd
+    }
 }

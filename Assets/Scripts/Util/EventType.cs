@@ -4,6 +4,7 @@ namespace Modules.EventSystem
     public enum EventType
     {
         EVENT_ROOM_IN,
-        EVENT_ROOM_OUT
+        EVENT_ROOM_OUT,
+        EVENT_HIGHLIGHT,
     };
 }
