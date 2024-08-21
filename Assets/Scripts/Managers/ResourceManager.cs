@@ -65,5 +65,6 @@ public class ResourceManager : Singleton<ResourceManager>
         if (obj == null) return;
 
         Object.Destroy(obj, time);
+        obj = null;
     }
 }

@@ -29,12 +29,7 @@
     {
         Unknown,
         UI_GameMenu,
-        UI_ItemBoxOpen,
-        UI_LevelUp,
-        UI_GameOver,
-        UI_GameVictory,
-        UI_TimeStop,
-        UI_CharacterSelect
+        UI_CharacterCommand
     }
 
     public enum SceneType
@@ -77,5 +72,12 @@
         Touch,
         Drag,
         TouchEnd
+    }
+
+    public enum SelectTileColor
+    {
+        Blue,
+        Red,
+        White
     }
 }

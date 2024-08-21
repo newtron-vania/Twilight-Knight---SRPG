@@ -5,25 +5,25 @@ public class GameManager : Singleton<GameManager>
 {
     public Quaternion defaultRotationValue = Quaternion.Euler(0, -90, 0);
 
-    public int currentTurn;
+    public int currentTurn = 0;
 
     private readonly Dictionary<int, Character> characters = new();
     private readonly string defaultCharactername = "MaleWorrior";
     private int enemyCharacterCount;
     private int playerCharacterCount;
-    private TileMap TileMap;
+    private TileManager _tileManager;
 
     public TileMap getTileMap()
     {
-        if (TileMap == null)
+        if (_tileManager.Tilemap == null)
         {
             var x = 30;
             var y = 30;
             var z = 10;
-            TileMap = new TileMap(x, y, z);
+            _tileManager.SetTileMap(x, y, z);
         }
 
-        return TileMap;
+        return _tileManager.Tilemap;
     }
 
     private Character CreateCharacter(bool isPlayerCharacter, string characterName = null)
